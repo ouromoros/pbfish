@@ -1,24 +1,22 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
-export function number() {
+export function number(): PNumber {
   return new PNumber();
 }
 
-export function string() {
+export function string(): PString {
   return new PString();
 }
 
-export function boolean() {
+export function boolean(): PBoolean {
   return new PBoolean();
 }
 
-export function array<T extends Schema>(schema: T) {
+export function array<T extends Schema>(schema: T): PArray<T> {
   return new PArray(schema);
 }
 
-export function object<T extends Record<string, Schema>>(schema: T) {
+export function object<T extends Record<string, Schema>>(
+  schema: T
+): PObject<T> {
   return new PObject(schema);
 }
 
@@ -102,8 +100,7 @@ class PObject<U extends Record<string, Schema>> {
       return null;
     }
 
-    // @ts-ignore
-    const result: ParseMapped<U> = {};
+    const result: ParseMapped<U> = {} as any;
     for (const [key, value] of Object.entries(this.schema)) {
       // @ts-ignore
       result[key] = value.parse(object[key]);
