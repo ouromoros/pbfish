@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "es2015",
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true,
+    "strict": true
+  },
+  "include": [
+    "test/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
