@@ -28,6 +28,11 @@ class PNumber {
   parse<T>(object: T): number {
     if (typeof object === "number") {
       return object;
+    } else if (typeof object === "string") {
+      const parsed = Number(object);
+      return isNaN(parsed) ? 0 : parsed;
+    } else if (typeof object === "boolean") {
+      return object ? 1 : 0;
     }
     return 0;
   }
@@ -37,6 +42,8 @@ class PString {
   parse<T>(object: T): string {
     if (typeof object === "string") {
       return object;
+    } else if (typeof object === "boolean" || typeof object === "number") {
+      return object.toString();
     }
     return "";
   }
@@ -47,7 +54,7 @@ class PBoolean {
     if (typeof object === "boolean") {
       return object;
     }
-    return false;
+    return !!object;
   }
 }
 

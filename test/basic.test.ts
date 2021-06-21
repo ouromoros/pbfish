@@ -7,7 +7,17 @@ test("number", () => {
   for (const n of numbers) {
     expect(ns.parse(n)).toBe(n);
   }
-  expect(ns.parse(null)).toBe(0);
+  const testCases = [
+    [null, 0],
+    [undefined, 0],
+    ["123abc", 0],
+    ["-123", -123],
+    [true, 1],
+    [false, 0],
+  ];
+  for (const [t, e] of testCases) {
+    expect(ns.parse(t)).toBe(e);
+  }
 });
 
 test("string", () => {
@@ -17,7 +27,15 @@ test("string", () => {
   for (const s of strings) {
     expect(ss.parse(s)).toBe(s);
   }
-  expect(ss.parse(null)).toBe("");
+  const testCases = [
+    [null, ""],
+    [undefined, ""],
+    [true, "true"],
+    [123, "123"],
+  ];
+  for (const [t, e] of testCases) {
+    expect(ss.parse(t)).toBe(e);
+  }
 });
 
 test("boolean", () => {
@@ -26,7 +44,16 @@ test("boolean", () => {
   expect(bs.parse(true)).toBe(true);
   expect(bs.parse(false)).toBe(false);
 
-  expect(bs.parse(null)).toBe(false);
+  const testCases = [
+    [null, false],
+    [undefined, false],
+    [123, true],
+    ["", false],
+    ["12jkj", true],
+  ];
+  for (const [t, e] of testCases) {
+    expect(bs.parse(t)).toBe(e);
+  }
 });
 
 test("array", () => {
@@ -37,7 +64,7 @@ test("array", () => {
 
   const faultyNumbers = ["-1", undefined, 123];
   const parsed2 = ans.parse(faultyNumbers);
-  expect(parsed2).toEqual([0, 0, 123]);
+  expect(parsed2).toEqual([-1, 0, 123]);
 });
 
 test("object", () => {
@@ -56,7 +83,7 @@ test("object", () => {
   };
   const e1 = {
     n: 23,
-    s: "",
+    s: "234",
     o: {
       n2: 0,
       b2: false,
