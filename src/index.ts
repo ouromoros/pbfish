@@ -21,40 +21,40 @@ export function object<T extends Record<string, Schema>>(
 }
 
 interface Schema {
-  parse(object: unknown): unknown;
+  parse(input: unknown): unknown;
 }
 
 class PNumber {
-  parse<T>(object: T): number {
-    if (typeof object === "number") {
-      return object;
-    } else if (typeof object === "string") {
-      const parsed = Number(object);
+  parse(input: unknown): number {
+    if (typeof input === "number") {
+      return input;
+    } else if (typeof input === "string") {
+      const parsed = Number(input);
       return isNaN(parsed) ? 0 : parsed;
-    } else if (typeof object === "boolean") {
-      return object ? 1 : 0;
+    } else if (typeof input === "boolean") {
+      return input ? 1 : 0;
     }
     return 0;
   }
 }
 
 class PString {
-  parse<T>(object: T): string {
-    if (typeof object === "string") {
-      return object;
-    } else if (typeof object === "boolean" || typeof object === "number") {
-      return object.toString();
+  parse(input: unknown): string {
+    if (typeof input === "string") {
+      return input;
+    } else if (typeof input === "boolean" || typeof input === "number") {
+      return input.toString();
     }
     return "";
   }
 }
 
 class PBoolean {
-  parse<T>(object: T): boolean {
-    if (typeof object === "boolean") {
-      return object;
+  parse(input: unknown): boolean {
+    if (typeof input === "boolean") {
+      return input;
     }
-    return !!object;
+    return !!input;
   }
 }
 
@@ -65,10 +65,10 @@ class PArray<U extends Schema> {
     this.schema = schema;
   }
 
-  parse<T>(object: T): Parse<U>[] {
-    if (Array.isArray(object)) {
+  parse(input: unknown): Parse<U>[] {
+    if (Array.isArray(input)) {
       const value = [];
-      for (const v of object) {
+      for (const v of input) {
         value.push(this.schema.parse(v));
       }
       return value as any;
@@ -102,15 +102,15 @@ class PObject<U extends Record<string, Schema>> {
     this.schema = object;
   }
 
-  parse<T>(object: T): ParseMapped<U> {
-    if (!object) {
+  parse(input: unknown): ParseMapped<U> {
+    if (typeof input !== "object" || input === null) {
       return null;
     }
 
     const result: ParseMapped<U> = {} as any;
     for (const [key, value] of Object.entries(this.schema)) {
       // @ts-ignore
-      result[key] = value.parse(object[key]);
+      result[key] = value.parse(input[key]);
     }
     return result;
   }
