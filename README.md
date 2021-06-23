@@ -3,8 +3,10 @@
 `pbfish` is yet another schema validation library and its API resembles the famous `joi`, only with fewer features. Different from `joi` which focuses on the ability to describe and *validate* schemas with powerful abstractions, `pbfish` mainly aims to parse the provided data into the desired shape with **good default behavior** for later processing. The idea is to make interacting with unknown data as comfortable as interacting with well-defined RPC request/response. Generally, `pbfish` aims to achieve the following goals:
 
 - Simple API, easy to use
-- Intuitive and well-defined behavior with any input
+- Intuitive and well-defined behavior with erroneous input
 - Accurate types support for TypeScript
+
+*NOTE*: Arguably what `pbfish` does is schema *parsing* rather than schema validation. However, since the existing libraries in "schema validation" category also does some *parsing* work and don't make clear distinctions here, we decide to remain indifferent to the ambiguity.
 
 ## Example
 
@@ -13,23 +15,44 @@ The API is almost identical with `yup`, here is a minimal example:
 ```typescript
 import * as pf from "pbfish";
 
-const s = '{ "a": 1, "b": "hello", "c": true, "d": {} }';
-const o = JSON.parse(s);
+const s = {
+  a: 1,
+  b: "hello",
+  c: "true",
+  d: {},
+  e: [1, 2],
+}
 
 const schema = pf.object({
   a: pf.number(),
   b: pf.string(),
   c: pf.boolean(),
-  d: pf.object({}),
+  d: pf.object({
+    k: pb.number(),
+  }),
+  e: pf.string(),
+  f: pf.object({
+    l: pb.string(),
+  })
 });
 
 const parsed = schema.parse(o);
-// The value of `parsed` is `{ a: 1, b: "hello", c: true, "d": {} }`
+// The value of `parsed`:
+// {
+//   a: 1,        matching type will preserve original value
+//   b: "hello",
+//   c: true,     conflict type will be transformed to the desired type intuitively
+//   d: {
+//        k: 0,   missing fields of object will have default value
+//      },
+//   e: "",       types that can't be intuitively parsed will have default value
+//   f: null,     default value of object is null
+// }
 ```
 
 ## Specification
 
-We first describe the schema object using literal types `number()`, `string()` and `boolean()`,  in combination with compositional types `object()` and `array()` like the example above. Then we call `parse(input)` where `input` is the value to be parsed. The parsed value will strictly follow the specification according to the defined schema.
+We first describe the schema object using literal types `number()`, `string()` and `boolean()`,  in combination with compositional types `object()` and `array()` like the example above. Then we call `parse(input)` on the object where `input` is the value to be parsed. The parsed value will strictly follow the specification according to the defined schema.
 
 `parse()` does not throw errors, nor does it provide any mechanism for investigating "errors" encountered in parsing. What `parse()` does is to transform the input into the desired shape with best efforts. When in doubt about the parsed result, the recommended approach is to investigate the original input value.
 
@@ -112,6 +135,7 @@ For `string` type, the parsing rule is complex, and is the same as the `Number()
 | `number`    |     any value except `0`    | `true` |
 | `boolean`   |      |    the original value     |
 | `string`    |    `""`    |      `false`       |
+| `string`    |    **case-insensitive false** eg. `false`, `False`, `FALSE`   |      `false`       |
 | `string`    |    any value except empty string    |      `true`       |
 | `null`    |         |     `false`     |
 | `undefined`    |         |     `false`     |

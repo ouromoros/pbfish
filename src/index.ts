@@ -53,6 +53,10 @@ class PBoolean {
   parse(input: unknown): boolean {
     if (typeof input === "boolean") {
       return input;
+    } else if (typeof input === "string") {
+      if (input.toLowerCase() === "false") {
+        return false;
+      }
     }
     return !!input;
   }
