@@ -1,19 +1,45 @@
+/// Number schema
+/// ```
+/// const s = pf.number();
+/// const v = s.parse(false); // v's value will be 0
+/// ```
 export function number(): PNumber {
   return new PNumber();
 }
 
+/// String schema
+/// ```
+/// const s = pf.string();
+/// const v = s.parse(42); // v's value will be "42"
+/// ```
 export function string(): PString {
   return new PString();
 }
 
+/// Boolean schema
+/// ```
+/// const s = pf.boolean();
+/// const v = s.parse("false"); // v's value will be `false`
+/// ```
 export function boolean(): PBoolean {
   return new PBoolean();
 }
 
+/// Array schema
+/// ```
+/// const s = pf.array(pf.number());
+/// const v = s.parse([1, "2", 3]); // v's value will be `[1, 2, 3]`
+/// ```
 export function array<T extends Schema>(schema: T): PArray<T> {
   return new PArray(schema);
 }
 
+/// Object schema
+/// ```
+/// const s = pf.object({ a: pf.number(), b: pf.string() });
+/// const v = s.parse({ a: 1, b: 2 }); // v's value will be `{ a: 1, b: "2" }`
+/// const v2 = s.parse(2); // v's value will be `null`
+/// ```
 export function object<T extends Record<string, Schema>>(
   schema: T
 ): PObject<T> {
@@ -71,7 +97,7 @@ class PArray<U extends Schema> {
     this.schema = schema;
   }
 
-  parse(input: unknown): Parse<U>[] {
+  parse(input: unknown): Target<U>[] {
     if (Array.isArray(input)) {
       const value = [];
       for (const v of input) {
@@ -83,21 +109,26 @@ class PArray<U extends Schema> {
   }
 }
 
-type Parse<T> = T extends PNumber
+/// Type of the parsed target
+/// ```
+/// const s = pf.object({ a: pb.number() });
+/// const a: Target<typeof s> = s.parse({});
+/// ```
+export type Target<T> = T extends PNumber
   ? number
   : T extends PString
   ? string
   : T extends PBoolean
   ? boolean
   : T extends PArray<infer U>
-  ? Parse<U>[]
+  ? Target<U>[]
   : T extends PObject<infer U>
-  ? ParseMapped<U>
+  ? MapTarget<U>
   : never;
 
-type ParseMapped<T> =
+type MapTarget<T> =
   | {
-      [P in keyof T]: Parse<T[P]>;
+      [P in keyof T]: Target<T[P]>;
     }
   | null;
 
@@ -108,12 +139,12 @@ class PObject<U extends Record<string, Schema>> {
     this.schema = object;
   }
 
-  parse(input: unknown): ParseMapped<U> {
+  parse(input: unknown): MapTarget<U> {
     if (typeof input !== "object" || input === null) {
       return null;
     }
 
-    const result: ParseMapped<U> = {} as any;
+    const result: MapTarget<U> = {} as any;
     for (const [key, value] of Object.entries(this.schema)) {
       // @ts-ignore
       result[key] = value.parse(input[key]);

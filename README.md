@@ -36,7 +36,7 @@ const schema = pf.object({
   })
 });
 
-const parsed = schema.parse(o);
+const parsed: pf.Target<typeof schema> = schema.parse(o);
 // The value of `parsed`:
 // {
 //   a: 1,        matching type will preserve original value
