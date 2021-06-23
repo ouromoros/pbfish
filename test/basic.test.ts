@@ -53,6 +53,8 @@ test("boolean", () => {
     ["False", false],
     ["false", false],
     ["FALSE", false],
+    [[], false],
+    [[1, 2], true],
   ];
   for (const [t, e] of testCases) {
     expect(bs.parse(t)).toBe(e);

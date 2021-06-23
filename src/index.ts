@@ -57,6 +57,8 @@ class PBoolean {
       if (input.toLowerCase() === "false") {
         return false;
       }
+    } else if (Array.isArray(input)) {
+      return input.length > 0;
     }
     return !!input;
   }

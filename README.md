@@ -136,9 +136,11 @@ For `string` type, the parsing rule is complex, and is the same as the `Number()
 | `boolean`   |      |    the original value     |
 | `string`    |    `""`    |      `false`       |
 | `string`    |    **case-insensitive false** eg. `false`, `False`, `FALSE`   |      `false`       |
-| `string`    |    any value except empty string    |      `true`       |
+| `string`    |    any value except empty string and "false"    |      `true`       |
 | `null`    |         |     `false`     |
 | `undefined`    |         |     `false`     |
+| `array`    |    `[]`    |      `false`       |
+| `array`    |    any value except empty array    |      `true`       |
 |  Other   |         |     `true`     |
 
 ### array
