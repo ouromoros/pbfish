@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "description": "protobuf-ish schema validation/parsing",
   "scripts": {
+    "build": "tsc",
     "test": "jest"
   },
   "author": "ouromoros",
   "license": "ISC",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.13.0",

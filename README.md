@@ -1,5 +1,9 @@
 # pbfish
 
+![npm](https://img.shields.io/npm/v/pbfish)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ouromoros/pbfish/Running%20Code%20Coverage)
+![Codecov](https://img.shields.io/codecov/c/gh/ouromoros/pbfish)
+
 `pbfish` is yet another schema validation library and its API resembles the famous `joi`, only with fewer features. Different from `joi` which focuses on the ability to describe and *validate* schemas with powerful abstractions, `pbfish` mainly aims to parse the provided data into the desired shape with **good default behavior** for later processing. The idea is to make interacting with unknown data as comfortable as interacting with well-defined RPC request/response. Generally, `pbfish` aims to achieve the following goals:
 
 - Simple API, easy to use
