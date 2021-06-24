@@ -6,6 +6,7 @@
     "build": "tsc",
     "test": "jest"
   },
+  "keywords": ["schema", "validation"],
   "author": "ouromoros",
   "license": "ISC",
   "main": "dist/index.js",
