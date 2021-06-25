@@ -1,7 +1,11 @@
 {
   "name": "pbfish",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "protobuf-ish schema validation/parsing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ouromoros/pbfish"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest"
