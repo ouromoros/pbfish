@@ -46,6 +46,24 @@ export function object<T extends Record<string, Schema>>(
   return new PObject(schema);
 }
 
+/**
+ * Choice schema
+ * @param values Candidates values
+ * @param defaultValue Default value
+ */
+export function choice<T>(values: T[], defaultValue: T): PChoice<T> {
+  return new PChoice<T>(values, defaultValue);
+}
+
+/**
+ * Custom schema
+ * @param parser The parser function. Given input which can be of any value, it should
+ *               return the parsed result and throw no errors
+ */
+export function custom<T>(parser: (input: unknown) => T): PCustom<T> {
+  return new PCustom<T>(parser);
+}
+
 interface Schema {
   parse(input: unknown): unknown;
 }
@@ -124,6 +142,10 @@ export type Target<T> = T extends PNumber
   ? Target<U>[]
   : T extends PObject<infer U>
   ? MapTarget<U>
+  : T extends PChoice<infer U>
+  ? U
+  : T extends PCustom<infer U>
+  ? U
   : never;
 
 type MapTarget<T> =
@@ -150,5 +172,35 @@ class PObject<U extends Record<string, Schema>> {
       result[key] = value.parse(input[key]);
     }
     return result;
+  }
+}
+
+class PChoice<T> {
+  values: T[];
+  default: T;
+
+  constructor(values: T[], defaultValue: T) {
+    this.values = values;
+    this.default = defaultValue;
+  }
+
+  parse(input: unknown): T {
+    if (this.values.includes(input as T)) {
+      return input as T;
+    } else {
+      return this.default;
+    }
+  }
+}
+
+class PCustom<T> {
+  parser: (input: unknown) => T;
+
+  constructor(parser: (input: unknown) => T) {
+    this.parser = parser;
+  }
+
+  parse(input: unknown): T {
+    return this.parser(input);
   }
 }
