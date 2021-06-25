@@ -1,6 +1,6 @@
 {
   "name": "pbfish",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "protobuf-ish schema validation/parsing",
   "scripts": {
     "build": "tsc",
