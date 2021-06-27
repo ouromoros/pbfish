@@ -1,7 +1,7 @@
 {
   "name": "pbfish",
   "version": "0.1.3",
-  "description": "protobuf-ish schema validation/parsing",
+  "description": "error-tolerant schema validation",
   "repository": {
     "type": "git",
     "url": "https://github.com/ouromoros/pbfish"
