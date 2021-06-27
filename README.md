@@ -1,10 +1,10 @@
 # pbfish
 
-![npm](https://img.shields.io/npm/v/pbfish)
+[![npm](https://img.shields.io/npm/v/pbfish)](https://www.npmjs.com/package/pbfish)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ouromoros/pbfish/Running%20Code%20Coverage)
 ![Codecov](https://img.shields.io/codecov/c/gh/ouromoros/pbfish)
 
-`pbfish` is yet another schema validation library and its API resembles the famous `joi`, only with fewer features. Different from `joi` which focuses on the ability to describe and *validate* schemas with powerful abstractions, `pbfish` mainly aims to parse the provided data into the desired shape with **good default behavior** for later processing. The idea is to make interacting with unknown data as comfortable as interacting with well-defined RPC request/response.
+`pbfish` is yet another schema validation library whose API resembles the famous `joi`, only with fewer methods. Different from `joi` which focuses on the ability to describe and *validate* schemas with powerful abstractions, `pbfish` mainly aims to parse the provided data into the desired shape with **good default behavior** for later processing. The idea is to make interacting with unknown data as comfortable as interacting with well-defined RPC request/response and be error-tolearnt.
 
 Generally, `pbfish` aims to achieve the following goals:
 
@@ -16,11 +16,17 @@ Generally, `pbfish` aims to achieve the following goals:
 
 ## Why not `joi`, `yup`, or other data validation libraries?
 
-`joi` and various other schema validation libraries have done a great job in *validating* schemas, but are hard to use otherwise when we need to work with data provided by different data sources that may contain different kinds of errors and do not strictly follow API requirements.
+`joi` and various other schema validation libraries have done a great job in *validating* schemas, but are hard to use otherwise when we need to work with data provided by external service that may contain errors and do not strictly follow API requirements. This is where `pbfish` would come to rescue.
 
 `pbfish` provides compatibility for data that may contain errors and can act as the "front guard" before any actual work is done on the unknown data. Common errors like missing fields and wrong types will be resolved automatically so that the application side can focus on actual business logic.
 
 Also, `pbfish` provides accurate types support and null safety for typescript projects. Who doesn't love safe types?
+
+## Installation
+
+```
+$ npm i pbfish
+```
 
 ## Example
 
