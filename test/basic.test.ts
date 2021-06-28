@@ -87,6 +87,7 @@ test("object", () => {
   const no = pf.object({
     n: pf.number(),
     s: pf.string(),
+    e: pf.enumeration([1, 2, 3]),
     o: pf.object({
       n2: pf.number(),
       b2: pf.boolean(),
@@ -104,6 +105,7 @@ test("object", () => {
   const e1 = {
     n: 0, // missing field will have default value
     s: "234",
+    e: 0,
     o: {
       // object fields should all be present and missing field have default value
       n2: 1,
@@ -114,12 +116,42 @@ test("object", () => {
 
   const o2 = {
     n: 2,
+    e: 3,
   };
   const e2 = {
     n: 2,
+    e: 3,
     // missing field will have default value
     s: "",
     o: null, // default value for `object` is `null`
   };
   expect(no.parse(o2)).toEqual(e2);
+});
+
+test("enum", () => {
+  const nEnums = pf.enumeration([1, 2, 3, 4]);
+  const nTestCases = [
+    [1, 1], // original value should be same
+    [3, 3],
+    [8, 0], // value not in the value set should be parsed to default
+    ["1", 1],
+    [true, 1],
+    ["dasffsd", 0], // invalid value should be parsed to default
+    [undefined, 0],
+  ];
+  for (const [t, e] of nTestCases) {
+    expect(nEnums.parse(t)).toBe(e);
+  }
+
+  const sEnums = pf.enumeration(["red", "green", "blue"]);
+  const sTestCases = [
+    ["red", "red"],
+    ["green", "green"],
+    ["kjkj", ""],
+    [123, ""],
+    [null, ""],
+  ];
+  for (const [t, e] of sTestCases) {
+    expect(sEnums.parse(t)).toBe(e);
+  }
 });
