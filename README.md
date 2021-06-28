@@ -178,3 +178,13 @@ For `string` type, the parsing rule is complex, and is the same as the `Number()
 | ---------- | ----------- | ------- |
 | `object`    |          | object of mapped parsed values, with all the fields present and have default zero value |
 |  Other   |         |     `null`     |
+
+### enumeration
+
+Currently, enumeration support number and string types. Input will first be parsed according to member type and then
+compared to the values in provided value set.
+
+| Input Type | Input Value Type |  Parsed Value|
+| ---------- | ----------- | ------- |
+| `any`    |    The parsed value is in enumeration value set      | original value |
+|  `any`   |    The parsed value is not in enumeration value set     |     default value for member type. (eg. `0`, `""`)     |

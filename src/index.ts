@@ -46,6 +46,15 @@ export function object<T extends Record<string, Schema>>(
   return new PObject(schema);
 }
 
+/**
+ * Enumeration type, member type can be number or string.
+ * The default value for string enum is empty string. For number enum the default is 0;
+ * @param values Valid values for the enumeration
+ */
+export function enumeration<T extends number | string>(values: T[]): PEnum<T> {
+  return new PEnum<T>(values);
+}
+
 interface Schema {
   parse(input: unknown): unknown;
 }
@@ -150,5 +159,41 @@ class PObject<U extends Record<string, Schema>> {
       result[key] = value.parse(input[key]);
     }
     return result;
+  }
+}
+
+class PEnum<T extends string | number> {
+  values: T[];
+  type: string;
+
+  constructor(values: T[]) {
+    this.values = values;
+    this.type = typeof values[0];
+  }
+
+  parse(input: unknown): T {
+    if (this.type == "number") {
+      return this.parseNumber(input) as T;
+    } else {
+      return this.parseString(input) as T;
+    }
+  }
+
+  parseNumber(input: unknown): number {
+    const value = number().parse(input);
+    if (this.values.includes(value as T)) {
+      return value;
+    } else {
+      return 0;
+    }
+  }
+
+  parseString(input: unknown): string {
+    const value = string().parse(input);
+    if (this.values.includes(value as T)) {
+      return value;
+    } else {
+      return "";
+    }
   }
 }
